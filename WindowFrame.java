@@ -79,10 +79,10 @@ public class WindowFrame extends JFrame{
         colors.put("magentaPanel", magentaPanel);
         colorKeys[5] = "magentaPanel";
 
-        ColorPanel blackJPanel = new ColorPanel();
-        blackJPanel.addMouseListener(blackJPanel);
-        blackJPanel.setBackground(Color.BLACK);
-        colors.put("blackPanel", blackJPanel);
+        ColorPanel blackPanel = new ColorPanel();
+        blackPanel.addMouseListener(blackPanel);
+        blackPanel.setBackground(Color.BLACK);
+        colors.put("blackPanel", blackPanel);
         colorKeys[6] = "blackPanel";
 
     }
@@ -116,11 +116,6 @@ public class WindowFrame extends JFrame{
         clear.addActionListener(clear);
         buttons.put("clear",clear);
         buttonKeys[4] = "clear";
-
-
-
-
-
 
     }
 
@@ -165,8 +160,11 @@ public class WindowFrame extends JFrame{
     public WindowFrame(){
 
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
         this.setSize(2000,2000);
+
         this.setTitle("Paint Brush Program");
+
         this.setLayout(new BorderLayout());
 
         loadColourPanels();
@@ -178,19 +176,22 @@ public class WindowFrame extends JFrame{
         this.drawAreaPanel = new DrawAreaPanel();
 
         drawAreaPanel.addMouseListener(drawAreaPanel);
+
         drawAreaPanel.addMouseMotionListener(drawAreaPanel);
 
         this.drawAreaPanel.setSize(500,300);
 
         this.add(abovePanel,BorderLayout.NORTH);
+
         this.add(drawAreaPanel,BorderLayout.CENTER);
 
     }
 
 
-    private class DrawAreaPanel extends JPanel implements MouseInputListener, MouseMotionListener {
+    private class DrawAreaPanel extends JPanel implements MouseInputListener{
 
         private ArrayList<Object> shapes = new ArrayList<>();
+
         private ArrayList<Color> shapesColor = new ArrayList<>();
 
         private RectangularShape movedItem = null;
@@ -205,6 +206,8 @@ public class WindowFrame extends JFrame{
         public void mouseClicked(MouseEvent e) {
         }
 
+
+
         @Override
         public void mousePressed(MouseEvent e) {
 
@@ -215,8 +218,6 @@ public class WindowFrame extends JFrame{
                 endY = startY;
             }
 
-
-
             else if(isMove){
 
                 for(int i=shapes.size()-1; i>=0; i--){
@@ -226,12 +227,14 @@ public class WindowFrame extends JFrame{
                         RectangularShape shape = (RectangularShape) shapes.get(i);
 
                         if (shape.contains(e.getX(), e.getY())) {
+
                             movedItem = (RectangularShape) shapes.get(i);
                             isFound = true;
                             movedColor = shapesColor.get(i);
                             shapes.remove(i);
                             shapesColor.remove(i);
                             break;
+
                         }
 
                     }
@@ -241,6 +244,8 @@ public class WindowFrame extends JFrame{
             }
 
         }
+
+
 
         @Override
         public void mouseReleased(MouseEvent e) {
@@ -267,45 +272,56 @@ public class WindowFrame extends JFrame{
 
             }
 
-
-
-
-
-
         }
+
+
 
         @Override
         public void mouseEntered(MouseEvent e) {
         }
 
+
+
         @Override
         public void mouseExited(MouseEvent e) {
         }
+
+
 
         @Override
         public void mouseDragged(MouseEvent e) {
 
             if(!isMoveWithPencil) {
+
                 endX = e.getX();
                 endY = e.getY();
                 repaint();
+
             }
             if( isMove && isFound){
+
                 repaint();
+
             }
 
             else if(isMoveWithPencil){
+
                 Graphics g = getGraphics();
                 Graphics2D g2 = (Graphics2D)g;
+
                 newX = e.getX();
                 newY = e.getY();
+
                 ((Graphics2D) g).setStroke(new BasicStroke(5));
                 g.setColor(chosenColor);
                 g.drawLine(oldPencilX,oldPencilY,newX,newY);
+
                 shapes.add(new MyLine(oldPencilX,oldPencilY,newX,newY));
                 shapesColor.add(chosenColor);
+
                 oldPencilX = newX;
                 oldPencilY = newY;
+
             }
 
         }
@@ -335,39 +351,52 @@ public class WindowFrame extends JFrame{
                         line = (MyLine) shapes.get(i);
 
                     if(shapes.get(i) instanceof Rectangle){
+
                         g.setColor(shapesColor.get(i));
                         g.fillRect((int)tempShape.getX(),(int)tempShape.getY(),(int)tempShape.getWidth(),(int)tempShape.getHeight());
+
                     }
                     else if(shapes.get(i) instanceof Ellipse2D){
+
                         g.setColor(shapesColor.get(i));
                         g.fillOval((int)tempShape.getX(), (int)tempShape.getY(),(int) tempShape.getWidth(), (int)tempShape.getHeight());
+
                     }
                     else if(shapes.get(i) instanceof MyLine){
+
                         ((Graphics2D) g).setStroke(new BasicStroke(5));
+
                         g.setColor(shapesColor.get(i));
                         g.drawLine(line.oldx,line.oldy,line.newx,line.newy);
+
                     }
                 }
 
+
                 if(isRectangle){
+
                     g.setColor(chosenColor);
                     g.fillRect(Math.min(startX, endX),Math.min(startY,endY),Math.abs(endX - startX),Math.abs(endY-startY));
+
                 }
                 else if(isOval){
+
                     g.setColor(chosenColor);
                     g.fillOval(Math.min(startX, endX),Math.min(startY,endY),Math.abs(endX - startX),Math.abs(endY-startY));
+
                 }
                 else if(isMove && isFound){
+
                     g.setColor(movedColor);
+
                     if(movedItem instanceof Rectangle)
                        g.fillRect(endX,endY,(int) movedItem.getWidth(), (int) movedItem.getHeight());
+
                     else if(movedItem instanceof  Ellipse2D.Double)
                         g.fillOval(endX,endY,(int) movedItem.getWidth(), (int) movedItem.getHeight());
+
                 }
-                /*else if(isMoveWithPencil){
-                    g.setColor(chosenColor);
-                    g.drawLine(oldPencilX,oldPencilY,newX,newY);
-                }*/
+               
                 
         }
 
@@ -377,8 +406,10 @@ public class WindowFrame extends JFrame{
 
         @Override
         public void mouseClicked(MouseEvent e) {
+
             chosenColor = this.getBackground();
             middleLine.setBackground(chosenColor);
+
         }
 
         @Override
@@ -407,28 +438,36 @@ public class WindowFrame extends JFrame{
             String command = e.getActionCommand();
 
             if(command.equals("Dikdörtgen Çiz")){
+
                 isRectangle = true;
                 isOval = false;
                 isMove = false;
                 isMoveWithPencil = false;
+
             }
             else if(command.equals("Oval Çiz")){
+
                 isOval = true;
                 isRectangle = false;
                 isMove = false;
                 isMoveWithPencil = false;
+
             }
             else if(command.equals("Kalemle Çiz")){
+
                 isMoveWithPencil = true;
                 isRectangle = false;
                 isOval = false;
                 isMove = false;
+
             }
             else if(command.equals("Taşı")){
+
                 isMove = true;
                 isRectangle = false;
                 isOval = false;
                 isMoveWithPencil = false;
+
             }
             else if(command.equals("Temizle")){
 
@@ -438,12 +477,13 @@ public class WindowFrame extends JFrame{
                 isMoveWithPencil = false;
 
                 for (int i=0; i<drawAreaPanel.shapes.size(); i++){
+
                     drawAreaPanel.shapes.set(i,null);
                     drawAreaPanel.shapesColor.set(i,null);
+
                 }
 
                 drawAreaPanel.repaint();
-
 
             }
 

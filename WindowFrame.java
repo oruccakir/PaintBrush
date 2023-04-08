@@ -518,8 +518,7 @@ public class WindowFrame extends JFrame{
 
         WindowFrame w = new WindowFrame();
         w.setVisible(true);
-        System.out.println(w.chosenColor.toString());
-
+       
 
     }
 
